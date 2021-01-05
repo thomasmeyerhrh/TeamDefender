@@ -6,18 +6,16 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Propriétés générales")]
     [SerializeField]
-    private float _speed = 20;
+    private float _speed = 10;
     [SerializeField]
-    private float _rotationSpeed = 10;
+    private float _rotationHSpeed = 10; // horizontal rotation speed
+    [SerializeField]
+    private float _rotationVSpeed = 8; // vertical rotation speed
 
     // 
     private PlayerMotor _motor;
     private Vector2 _direction;
     private Vector2 _rotation;
-
-    [Header("Composants")]
-    [SerializeField]
-    private GameObject _torso;
 
     #region general event
     private void Start()
@@ -30,19 +28,21 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Déplacement du joueur
+        Vector3 deplacement = Vector3.zero;
         // avant arrière
-        transform.position += transform.forward * _direction.y * _speed * Time.deltaTime;
+        deplacement += transform.forward * _direction.y * _speed;
         // chasse gauche droite
-        transform.position += transform.right * _direction.x * _speed * Time.deltaTime;
+        deplacement += transform.right * _direction.x * _speed;
+        _motor.Move(deplacement);
 
         // rotation du joueur
+        Vector3 rotation = Vector3.zero;
         // droite gauche
-        transform.Rotate(new Vector3(0f, _rotation.x, 0f) * _rotationSpeed * Time.deltaTime);
+        rotation += new Vector3(0f, _rotation.x, 0f) * _rotationHSpeed;
         // haut bas
-        if(_torso != null)
-        {
-            _torso.transform.Rotate(new Vector3(_rotation.y * -1, 0f, 0f) * _rotationSpeed * Time.deltaTime);
-        }
+        rotation += new Vector3(_rotation.y * -1, 0f, 0f) * _rotationVSpeed;
+        _motor.RotateTorso(rotation);
+        // reinitialisation du vecteur rotation (cumulé à chaque mouvement de la souris)
         _rotation = new Vector2();
     }
 
@@ -50,11 +50,10 @@ public class PlayerController : MonoBehaviour
 
     #region action
 
-    // update direction with player action
+    // update direction movement with player action
     public void OnMove(InputValue inputValue)
     {
         Vector2 newDirection = inputValue.Get<Vector2>();
-        Debug.Log("new direction :" + newDirection);
         if(newDirection != null)
         {
             _direction = new Vector2(newDirection.x, newDirection.y);
@@ -62,10 +61,9 @@ public class PlayerController : MonoBehaviour
     }
 
     // update direction pointed by player
-    public void OnPointer(InputValue inputValue)
+    public void OnLook(InputValue inputValue)
     {
         Vector2 delta = inputValue.Get<Vector2>();
-        Debug.Log("OnPoint :" + delta);
         if(delta != null)
         {
             _rotation += delta;
