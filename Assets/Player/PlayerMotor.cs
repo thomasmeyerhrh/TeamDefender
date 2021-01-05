@@ -5,6 +5,7 @@ public class PlayerMotor : MonoBehaviour
 {
     private Vector3 _deplacement;
     private Vector3 _rotation;
+    private Vector3 _rotationTorso;
 
     [Header("Composants")]
     private Rigidbody _rigidbody;
@@ -17,6 +18,7 @@ public class PlayerMotor : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _deplacement = Vector3.zero;
         _rotation = Vector3.zero;
+        _rotationTorso = Vector3.zero;
     }
     private void FixedUpdate()
     {
@@ -32,10 +34,15 @@ public class PlayerMotor : MonoBehaviour
         _deplacement = deplacement;
     }
 
+    public void Rotate(Vector3 rotation)
+    {
+        _rotation += rotation;
+    }
+
     public void RotateTorso(Vector3 rotation)
     {
         //Debug.Log("rotation " + rotation);
-        _rotation += rotation;
+        _rotationTorso += rotation;
     }
     #endregion
 
@@ -55,12 +62,16 @@ public class PlayerMotor : MonoBehaviour
         {
             // tourne le joueur
             _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(new Vector3(0f, _rotation.y, 0f) * Time.fixedDeltaTime));
+            _rotation = Vector3.zero;
+
+            // tourne le torse 
             if(_torso != null)
             {
-                _torso.transform.Rotate(new Vector3(_rotation.x, 0f, 0f) * Time.fixedDeltaTime); 
+                // haut bas
+                _torso.transform.Rotate(new Vector3(_rotationTorso.x, 0f, 0f) * Time.fixedDeltaTime); 
             }
         }
-        _rotation = Vector3.zero;
+        _rotationTorso = Vector3.zero;
     }
     #endregion
 }

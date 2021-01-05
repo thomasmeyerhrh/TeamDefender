@@ -39,9 +39,13 @@ public class PlayerController : MonoBehaviour
         Vector3 rotation = Vector3.zero;
         // droite gauche
         rotation += new Vector3(0f, _rotation.x, 0f) * _rotationHSpeed;
+        _motor.Rotate(rotation);
+
+        // rotation du torse du joueur
+        Vector3 rotationTorso = Vector3.zero;
         // haut bas
-        rotation += new Vector3(_rotation.y * -1, 0f, 0f) * _rotationVSpeed;
-        _motor.RotateTorso(rotation);
+        rotationTorso += new Vector3(_rotation.y * -1, 0f, 0f) * _rotationVSpeed;
+        _motor.RotateTorso(rotationTorso);
         // reinitialisation du vecteur rotation (cumulé à chaque mouvement de la souris)
         _rotation = new Vector2();
     }
