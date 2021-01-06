@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 
 public class PlayerSetup : NetworkBehaviour
+//public class PlayerSetup : MonoBehaviour
 {
     [SerializeField]
     Behaviour[] componentsToDisable;
@@ -13,7 +14,7 @@ public class PlayerSetup : NetworkBehaviour
         // desactivation des composants si n'est pas le joueur local
         if (!isLocalPlayer)
         {
-            foreach(Behaviour behaviour in componentsToDisable)
+            foreach (Behaviour behaviour in componentsToDisable)
             {
                 Behaviour.Destroy(behaviour);
             }
@@ -22,7 +23,7 @@ public class PlayerSetup : NetworkBehaviour
         else
         {
             _sceneCamera = Camera.main;
-            if(_sceneCamera != null)
+            if (_sceneCamera != null)
             {
                 _sceneCamera.gameObject.SetActive(false);
             }

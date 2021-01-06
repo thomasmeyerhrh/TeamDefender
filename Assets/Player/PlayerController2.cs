@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerMotor))]
-public class PlayerController : MonoBehaviour
+public class PlayerController2 : MonoBehaviour // file can't be named PlayerController, else Mirror add 3 component to player prefab (network transform, capsule collider, CharacterController)
 {
     [Header("Propriétés générales")]
     [SerializeField]
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputValue inputValue)
     {
         Vector2 newDirection = inputValue.Get<Vector2>();
-        if(newDirection != null)
+        if (newDirection != null)
         {
             _direction = new Vector2(newDirection.x, newDirection.y);
         }
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
     public void OnLook(InputValue inputValue)
     {
         Vector2 delta = inputValue.Get<Vector2>();
-        if(delta != null)
+        if (delta != null)
         {
             _rotation += delta;
         }
